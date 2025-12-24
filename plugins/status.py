@@ -1,14 +1,15 @@
 """服务器状态查询插件"""
 import time
 import psutil
-from ncatbot.plugin_system import BasePlugin
-from ncatbot.plugin_system import command_registry
+from ncatbot.plugin_system import NcatBotPlugin, command_registry
 from ncatbot.core.event import BaseMessageEvent
 
 
-class StatusPlugin(BasePlugin):
+class StatusPlugin(NcatBotPlugin):
     name = "StatusPlugin"
     version = "1.0.0"
+    author = "Windsland52"
+    dependencies = {}
 
     @command_registry.command("status", description="查询服务器状态")
     async def status_cmd(self, event: BaseMessageEvent):
@@ -31,3 +32,6 @@ class StatusPlugin(BasePlugin):
             f"运行时间: {days}天 {hours}小时 {minutes}分钟"
         )
         await event.reply(status_text)
+
+
+__all__ = ["StatusPlugin"]

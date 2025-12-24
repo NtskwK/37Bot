@@ -1,12 +1,13 @@
 """帮助命令插件 - 自动解析已注册命令生成帮助信息"""
-from ncatbot.plugin_system import BasePlugin
-from ncatbot.plugin_system import command_registry
+from ncatbot.plugin_system import NcatBotPlugin, command_registry
 from ncatbot.core.event import BaseMessageEvent
 
 
-class HelpPlugin(BasePlugin):
+class HelpPlugin(NcatBotPlugin):
     name = "HelpPlugin"
     version = "1.0.0"
+    author = "Windsland52"
+    dependencies = {}
 
     @command_registry.command("help", description="显示所有可用命令")
     async def help_cmd(self, event: BaseMessageEvent):
@@ -20,3 +21,6 @@ class HelpPlugin(BasePlugin):
             lines.append(f"/{cmd_name} - {desc}")
 
         await event.reply("\n".join(lines))
+
+
+__all__ = ["HelpPlugin"]
