@@ -1,0 +1,26 @@
+# 37Bot systemd 服务配置
+# 使用前请根据实际环境修改 User、WorkingDirectory、ExecStart 路径
+#
+# 部署步骤:
+#   sudo cp 37bot.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable 37bot
+#   sudo systemctl start 37bot
+
+[Unit]
+Description=37Bot QQ Robot
+After=network.target docker.service
+Wants=docker.service
+
+[Service]
+Type=simple
+StartLimitIntervalSec=60
+StartLimitBurst=3
+User=root
+WorkingDirectory=/home/37Bot
+ExecStart=/home/37Bot/.venv/bin/python main.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
