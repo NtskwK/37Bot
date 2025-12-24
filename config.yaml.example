@@ -1,0 +1,20 @@
+# 37Bot 配置文件模板
+# 复制此文件为 config.yaml 并填写实际配置
+
+root: '123456'      # 管理员 QQ 号
+bt_uin: '123456'    # 机器人 QQ 号
+debug: false
+
+napcat:
+  ws_uri: ws://localhost:3001
+  webui_uri: http://localhost:6099
+  ws_token: 'NcatBot'
+  webui_token: 'NcatBot'
+  remote_mode: true
+  stop_napcat: false
+  report_self_message: false
+
+plugin:
+  plugins_dir: plugins
+  plugin_whitelist: []
+  plugin_blacklist: []

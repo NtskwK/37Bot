@@ -1,0 +1,11 @@
+[project]
+name = "37bot"
+version = "0.1.0"
+description = "QQ Bot based on NcatBot"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "ncatbot",
+]
+[tool.uv]
+index-url = "https://pypi.tuna.tsinghua.edu.cn/simple"

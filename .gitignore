@@ -208,3 +208,7 @@ __marimo__/
 
 # 37bot
 napcat/
+data/
+config.yaml
+
+docs/
