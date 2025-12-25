@@ -5,9 +5,9 @@ from pathlib import Path
 from dataclasses import dataclass, asdict
 from typing import Optional
 
-from ncatbot.plugin_system import NcatBotPlugin, command_registry, param
+from ncatbot.plugin_system import NcatBotPlugin, command_registry, param, on_message
 from ncatbot.core.event import GroupMessageEvent
-from ncatbot.core.event.message_segment import Reply
+from ncatbot.core.event.message_segment import Reply, Text
 from ncatbot.core.helper import ForwardConstructor
 from ncatbot.utils import get_log
 
@@ -62,20 +62,35 @@ class TodoPlugin(NcatBotPlugin):
             return 1
         return max(item.id for item in items) + 1
 
-    @command_registry.command("todo_add", description="添加待办(可回复消息)")
-    @param(name="content", default="", help="待办内容")
-    async def cmd_add(self, event: GroupMessageEvent, content: str = ""):
-        """添加待办"""
+    @on_message
+    async def handle_todo_add(self, event: GroupMessageEvent):
+        """监听 /todo_add 命令（支持回复消息）"""
         import time
+
+        if not isinstance(event, GroupMessageEvent):
+            return
+
+        # 检查是否包含 /todo_add 命令
+        raw = event.raw_message or ""
+        if "/todo_add" not in raw and "!todo_add" not in raw:
+            return
+
         group_id = str(event.group_id)
 
-        # 检查是否回复了消息
+        # 提取回复消息ID和内容
         reply_msg_id = None
+        content = ""
+
         if hasattr(event, 'message') and event.message:
             for seg in event.message:
-                if isinstance(seg, Reply):
+                seg_type = getattr(seg, 'msg_seg_type', None)
+                if seg_type == 'reply':
                     reply_msg_id = seg.id
-                    break
+                elif seg_type in ('text', 'plain'):
+                    text = getattr(seg, 'text', '') or ""
+                    text = text.replace('/todo_add', '').replace('!todo_add', '').strip()
+                    if text:
+                        content = text
 
         if not content and not reply_msg_id:
             await event.reply("请输入待办内容或回复一条消息")
@@ -111,17 +126,23 @@ class TodoPlugin(NcatBotPlugin):
 
         for item in items:
             if item.message_id:
-                # 通过消息ID添加
+                # 手动异步获取消息
                 try:
-                    fc.attach_message_id(item.message_id)
-                except Exception:
+                    msg = await self.api.get_msg(item.message_id)
+                    user_id = msg.user_id
+                    nickname = msg.sender.nickname if msg.sender else info.nickname
+                    fc.attach(msg.message, user_id, nickname)
+                except Exception as e:
+                    logger.error(f"get_msg failed for {item.message_id}: {e}")
                     fc.attach_text(f"#{item.id} [消息已失效]")
             else:
                 fc.attach_text(f"#{item.id} {item.content}")
 
-        await self.api.post_group_forward_msg(
-            event.group_id, fc.to_forward()
-        )
+        try:
+            await self.api.post_group_forward_msg(event.group_id, fc.to_forward())
+        except Exception as e:
+            logger.error(f"post_group_forward_msg failed: {e}")
+            await event.reply(f"发送转发消息失败: {e}")
 
     @command_registry.command("todo_done", description="完成待办")
     async def cmd_done(self, event: GroupMessageEvent, id: int):
