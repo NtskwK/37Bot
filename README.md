@@ -42,16 +42,46 @@ python main.py
 ├── config.yaml          # 配置文件 (git ignored)
 ├── config.yaml.example  # 配置模板
 ├── plugins/             # 插件目录
-│   ├── status.py        # 服务器状态查询
-│   └── help.py          # 帮助命令
+│   ├── status/          # 服务器状态查询
+│   ├── help/            # 帮助命令
+│   ├── mirrorchyan/     # Mirror酱资源下载
+│   ├── groupadmin/      # 群管理
+│   └── todo/            # 群待办
 ├── 37bot.service        # systemd 服务配置
 └── start-napcat.sh      # NapCat Docker 启动脚本
 ```
 
-## 内置功能
+## 插件功能
+
+### 帮助
+
+- `/help` - 显示模块列表
+- `/help <模块>` - 显示模块命令
+
+### 状态
 
 - `/status` - 查询服务器状态（CPU、内存、Swap、磁盘、运行时间）
-- `/help` - 显示所有可用命令
+
+### Mirror酱
+
+- `/mc_cdk <rid> <cdk>` - 绑定 CDK
+- `/mc_download <rid>` - 下载资源
+- `/mc_upload <rid>` - 上传资源（回复文件消息）
+
+### 群管
+
+- `/ga_enable` - [管理员] 启用本群群管功能
+- `/ga_disable` - [管理员] 禁用本群群管功能
+- `/ga_pattern <正则>` - [管理员] 设置入群验证正则
+- `/ga_reject <启用> <理由>` - [管理员] 设置自动拒绝
+- `/ga_status` - 查看本群群管状态
+- `/ga_query [QQ号]` - [管理员] 查询成员记录
+
+### 待办
+
+- `/todo_add <内容>` - 添加待办（支持回复消息）
+- `/todo_list` - 查看待办列表
+- `/todo_done <id>` - 完成待办
 
 ## License
 
