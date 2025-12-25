@@ -1,4 +1,5 @@
 """服务器状态查询插件"""
+
 import time
 import psutil
 from ncatbot.plugin_system import NcatBotPlugin, command_registry

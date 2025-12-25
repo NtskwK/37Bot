@@ -1,4 +1,5 @@
 """帮助命令插件 - 自动解析已注册命令生成帮助信息"""
+
 from ncatbot.plugin_system import NcatBotPlugin, command_registry
 from ncatbot.core.event import BaseMessageEvent
 
