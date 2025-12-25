@@ -376,6 +376,9 @@ class MirrorChyanPlugin(NcatBotPlugin):
                     if r.rid == rid and r.type == type:
                         sub.resources.remove(r)
                         self._save_config()
+                        # 停止定时任务
+                        task_name = f"mirror_{group_id}_{rid}_{type}"
+                        self.remove_scheduled_task(task_name)
                         await event.reply(f"已取消订阅: {rid}")
                         return
         await event.reply(f"未找到订阅: {rid}")
