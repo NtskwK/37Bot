@@ -1,0 +1,10 @@
+{
+    "[python]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    },
+    "[markdown]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+    }
+}
